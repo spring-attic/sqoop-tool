@@ -16,16 +16,24 @@
 
 package org.springframework.cloud.task.app.sqoop.tool;
 
+import java.io.File;
+import java.io.FilenameFilter;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.sql.SQLException;
+import java.util.UUID;
+import javax.sql.DataSource;
+
 import org.apache.commons.io.FileUtils;
 import org.hsqldb.Server;
 import org.junit.AfterClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.test.IntegrationTest;
-import org.springframework.boot.test.SpringApplicationConfiguration;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.cloud.task.sqoop.common.SqoopToolDatabaseConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -35,15 +43,8 @@ import org.springframework.jdbc.datasource.DataSourceUtils;
 import org.springframework.jdbc.datasource.SingleConnectionDataSource;
 import org.springframework.jdbc.datasource.init.DatabasePopulator;
 import org.springframework.jdbc.datasource.init.ResourceDatabasePopulator;
+import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-
-import javax.sql.DataSource;
-import java.io.File;
-import java.io.FilenameFilter;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.sql.SQLException;
-import java.util.UUID;
 
 import static org.junit.Assert.assertTrue;
 
@@ -57,9 +58,8 @@ import static org.junit.Assert.assertTrue;
  * @author Thomas Risberg
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@SpringApplicationConfiguration(classes={SqoopToolDatabaseConfiguration.class,
+@SpringBootTest(classes={SqoopToolDatabaseConfiguration.class,
 		SqoopToolTaskApplicationTests.TestConfig.class, SqoopToolTaskApplicationTests.TestSqoopToolTaskApplication.class})
-@IntegrationTest
 public abstract class SqoopToolTaskApplicationTests {
 
 	private static String testDir;
@@ -74,7 +74,7 @@ public abstract class SqoopToolTaskApplicationTests {
 		System.setProperty("sqoop.test.dir", testDir);
 	}
 
-	@IntegrationTest({"spring.cloud.task.closecontext.enable:false",
+	@TestPropertySource(properties = {"spring.cloud.task.closecontext.enable:false",
 			"spring.hadoop.fsUri=file:///",
 			"spring.hadoop.config.mapreduce.framework.name=local",
 			"connect=jdbc:hsqldb:hsql://localhost:${db.server.port}/test",
@@ -100,7 +100,7 @@ public abstract class SqoopToolTaskApplicationTests {
 		}
 	}
 
-	@IntegrationTest({"spring.cloud.task.closecontext.enable:false",
+	@TestPropertySource(properties ={"spring.cloud.task.closecontext.enable:false",
 			"spring.hadoop.fsUri=file:///",
 			"spring.hadoop.config.mapreduce.framework.name=local",
 			"connect=jdbc:hsqldb:hsql://localhost:${db.server.port}/test",
