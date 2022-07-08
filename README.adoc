@@ -1,3 +1,5 @@
+# sqoop-tool is no longer actively maintained by VMware, Inc.
+
 # Sqoop Tool Task Application
 
 = PLEASE NOTE: This project is no longer actively developed.
